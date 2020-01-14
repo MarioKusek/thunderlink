@@ -149,7 +149,12 @@ function replaceVariables(template, hdr) {
   result = result.replace(/<messageid>/ig, hdr.messageId);
   result = result.replace(/<subject>/ig, subject);
   result = result.replace(/<filteredSubject>/ig, protectedSubject);
-  result = result.replace(/<sender>/ig, GlodaUtils.deMime(hdr.author));
+  
+  var author = GlodaUtils.parseMailAddresses(hdr.author);
+  result = result.replace(/<sender>/ig, author.fullAddresses[0]);
+  result = result.replace(/<senderName>/ig, author.names[0]);
+  result = result.replace(/<senderEmail>/ig, author.addresses[0]);
+  
   result = result.replace(/<tbexe>/ig, "\"" + getThunderlinkPathToExe() + "\" -thunderlink ");
 
   const date = new Date(hdr.date / 1000);
